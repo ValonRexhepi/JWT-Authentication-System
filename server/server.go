@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/ValonRexhepi/JWT-Authentication-System/routes"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,9 +14,17 @@ import (
 func LaunchServer() {
 	router := gin.Default()
 
-	router.POST("/users", routes.AddUser)
+	config := cors.DefaultConfig()
+	config.AllowCredentials = true
+	config.AllowAllOrigins = true
+
+	router.Use(cors.New(config))
+
+	router.POST("/users/register", routes.AddUser)
+	router.POST("/users/login", routes.LoginUser)
 
 	err := router.Run("localhost:8080")
+
 	if err != nil {
 		fmt.Println("Can't launch the server: ", err)
 		os.Exit(-1)

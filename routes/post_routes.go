@@ -36,7 +36,32 @@ func AddUser(c *gin.Context) {
 		"usercreated": map[string]string{
 			"username": newUser.Username,
 			"email":    newUser.Email,
-			"password": newUser.Password,
 		},
 	})
+}
+
+// LoginUser function to respond to a login of a user.
+// Respond by JSON object with error if error,
+// else respond with success message and JWT cookie.
+func LoginUser(c *gin.Context) {
+	var loginUser models.User
+
+	if err := c.Bind(&loginUser); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": fmt.Sprintf("Error of type : %v", err),
+		})
+		return
+	}
+
+	if err := controllers.LoginUser(&loginUser); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": fmt.Sprintf("Error of type : %v", err),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"success": "Successfully connected",
+	})
+
 }

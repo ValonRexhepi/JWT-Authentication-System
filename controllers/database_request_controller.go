@@ -24,7 +24,7 @@ func AddUser(userToAdd *models.User) (int, error) {
 	cryptPassword, err := GenerateCryptPassword(userToAdd.Password)
 
 	if err != nil {
-		return -1, err
+		return -1, fmt.Errorf("cannot create user")
 	}
 
 	userToAdd.Password = string(cryptPassword)
@@ -32,8 +32,27 @@ func AddUser(userToAdd *models.User) (int, error) {
 	result := DB.Omit("ID").Create(userToAdd)
 
 	if result.Error != nil {
-		return -1, result.Error
+		return -1, fmt.Errorf("cannot create user")
 	}
 
 	return userToAdd.ID, nil
+}
+
+// LoginUser function to respond to a login of a user.
+// Returns nil error if the connection succeeded and error otherwise.
+func LoginUser(userToLogin *models.User) error {
+	userToLogin.TrimSpaces()
+	var userInDatabase models.User
+
+	result := DB.Where("Email = ?", userToLogin.Email).First(&userInDatabase)
+
+	if result.Error != nil || userInDatabase.ID == 0 {
+		return fmt.Errorf("wrong login information")
+	}
+
+	if err := CheckHashWithPassword(userInDatabase.Password, userToLogin.Password); err != nil {
+		return fmt.Errorf("wrong login information")
+	}
+
+	return nil
 }

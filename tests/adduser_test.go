@@ -31,7 +31,7 @@ func TestAddUserSuccess(t *testing.T) {
 			Name:     "Hermione Granger",
 			Username: "germgrang",
 			Email:    "hermione-granger@outlook.com",
-			Password: `j*Ly^(="4xh/]}?c`,
+			Password: "j*Ly^(=14xh/]}?c",
 		},
 	}
 
@@ -65,7 +65,7 @@ func TestAddUserFail(t *testing.T) {
 
 	controllers.AddUser(&userToAdd)
 
-	addUserSuccessFail := []models.User{
+	addUserFail := []models.User{
 		{
 			Name:     "test",
 			Username: "",
@@ -154,13 +154,13 @@ func TestAddUserFail(t *testing.T) {
 			Name:     "Harry Potter",
 			Username: "vrex",
 			Email:    "harry-potter@outlook.com",
-			Password: `j*Ly^(="4xh/]}?c`,
+			Password: "j*Ly^(=14xh/]}?c",
 		},
 		{
 			Name:     "Harry Potter",
 			Username: "val rex",
 			Email:    "valon-rexhepi@outlook.com",
-			Password: `j*Ly^(="4xh/]}?c`,
+			Password: "j*Ly^(=14xh/]}?c",
 		},
 		{
 			Name:     "First User",
@@ -170,7 +170,7 @@ func TestAddUserFail(t *testing.T) {
 		},
 	}
 
-	for _, tt := range addUserSuccessFail {
+	for _, tt := range addUserFail {
 		{
 			testname := fmt.Sprintf("TEST:%s, %s", tt.Username, tt.Email)
 			t.Run(testname, func(t *testing.T) {

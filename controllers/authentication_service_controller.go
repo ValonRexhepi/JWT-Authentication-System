@@ -18,6 +18,13 @@ func GenerateCryptPassword(password string) (string, error) {
 	return string(cryptPassword), nil
 }
 
+// CheckHashWithPassword function to check if a given password match
+// the hash in the database. Return nil if match else return the err.
+func CheckHashWithPassword(passwordHashed, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(passwordHashed),
+		[]byte(password))
+}
+
 // ValidatePasswordEntropy checks the password entropy return
 // error with nil if has enough entropy else return a description
 // message on how to improve password entropy.
