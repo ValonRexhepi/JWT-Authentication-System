@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:latest
+    platform: linux/amd64
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE
+    environment:
+      MYSQL_ROOT_PASSWORD: "secret"
+      MYSQL_DATABASE: "UserDB"
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+volumes:
+  data:
