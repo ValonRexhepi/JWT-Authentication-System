@@ -5,6 +5,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// String secret key used for jwt encryption. As the jwt documentation
+// recommends "It is recommended to generate
+// a key using crypto/rand or something equivalent. You need the same key
+// for signing and validating.". In a production environment, we would
+// generate a key using crypto/rand and would store it encrypted in a
+// database but for the seek of the example, we use a simple string here.
+const JwtSecretKey = "thisisasecretkey"
+
 // GenerateCryptPassword function to take a string password
 // and if error return empty string with error else
 // return string hashed password and nil error.

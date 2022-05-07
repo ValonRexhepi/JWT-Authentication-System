@@ -50,7 +50,8 @@ func LoginUser(userToLogin *models.User) error {
 		return fmt.Errorf("wrong login information")
 	}
 
-	if err := CheckHashWithPassword(userInDatabase.Password, userToLogin.Password); err != nil {
+	if err := CheckHashWithPassword(userInDatabase.Password,
+		userToLogin.Password); err != nil {
 		return fmt.Errorf("wrong login information")
 	}
 
