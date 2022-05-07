@@ -30,7 +30,7 @@ func TestLoginUserSuccess(t *testing.T) {
 		Password: " j*Ly^ (=14xh/]}?c",
 	}
 
-	err := controllers.LoginUser(&loginUserSuccessTests)
+	_, err := controllers.LoginUser(&loginUserSuccessTests)
 
 	if err != nil {
 		t.Errorf("Expected to successfully login user %v, got %v",
@@ -97,7 +97,7 @@ func TestLoginUserFail(t *testing.T) {
 		{
 			testname := fmt.Sprintf("TEST:%s, %s", tt.Username, tt.Email)
 			t.Run(testname, func(t *testing.T) {
-				err := controllers.LoginUser(&tt)
+				_, err := controllers.LoginUser(&tt)
 				if err == nil {
 					t.Errorf("Expected to fail create user %v, got %v",
 						tt, err)

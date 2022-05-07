@@ -3,12 +3,10 @@ package routes
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/ValonRexhepi/JWT-Authentication-System/controllers"
 	"github.com/ValonRexhepi/JWT-Authentication-System/models"
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 // AddUser function to respond to a post a new user.
@@ -55,21 +53,16 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 
-	err := controllers.LoginUser(&loginUser)
+	username, err := controllers.LoginUser(&loginUser)
 
-	if err != nil {
+	if err != nil || len(username) == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": fmt.Sprintf("Error of type : %v", err),
 		})
 		return
 	}
 
-	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
-		IssuedAt:  jwt.NewNumericDate(time.Now()),
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24)),
-	})
-
-	tokenString, err := claims.SignedString([]byte(controllers.JwtSecretKey))
+	tokenString, expirationTime, err := controllers.GenerateTokenString(username)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -78,14 +71,8 @@ func LoginUser(c *gin.Context) {
 		return
 	}
 
-	cookie := &http.Cookie{
-		Name:     "jwt",
-		Value:    tokenString,
-		Expires:  time.Now().Add(time.Hour * 24),
-		HttpOnly: true,
-	}
-
-	http.SetCookie(c.Writer, cookie)
+	http.SetCookie(c.Writer,
+		controllers.GetJWTCookie(tokenString, expirationTime))
 
 	c.JSON(http.StatusOK, gin.H{
 		"success": "Successfully connected",

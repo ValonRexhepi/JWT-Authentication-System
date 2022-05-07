@@ -39,21 +39,22 @@ func AddUser(userToAdd *models.User) (int, error) {
 }
 
 // LoginUser function to respond to a login of a user.
-// Returns nil error if the connection succeeded and error otherwise.
-func LoginUser(userToLogin *models.User) error {
+// Returns username with nil error if the connection succeeded
+// and empty string with error otherwise.
+func LoginUser(userToLogin *models.User) (string, error) {
 	userToLogin.TrimSpaces()
 	var userInDatabase models.User
 
 	result := DB.Where("Email = ?", userToLogin.Email).First(&userInDatabase)
 
 	if result.Error != nil || userInDatabase.ID == 0 {
-		return fmt.Errorf("wrong login information")
+		return "", fmt.Errorf("wrong login information")
 	}
 
 	if err := CheckHashWithPassword(userInDatabase.Password,
 		userToLogin.Password); err != nil {
-		return fmt.Errorf("wrong login information")
+		return "", fmt.Errorf("wrong login information")
 	}
 
-	return nil
+	return userInDatabase.Username, nil
 }

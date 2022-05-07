@@ -1,17 +1,22 @@
 package controllers
 
 import (
+	"net/http"
+	"time"
+
+	"github.com/ValonRexhepi/JWT-Authentication-System/models"
+	"github.com/golang-jwt/jwt/v4"
 	passwordvalidator "github.com/wagslane/go-password-validator"
 	"golang.org/x/crypto/bcrypt"
 )
 
-// String secret key used for jwt encryption. As the jwt documentation
+// Byte array secret key used for jwt encryption. As the jwt documentation
 // recommends "It is recommended to generate
 // a key using crypto/rand or something equivalent. You need the same key
 // for signing and validating.". In a production environment, we would
 // generate a key using crypto/rand and would store it encrypted in a
 // database but for the seek of the example, we use a simple string here.
-const JwtSecretKey = "thisisasecretkey"
+var JwtSecretKey = []byte("thisisasecretkey")
 
 // GenerateCryptPassword function to take a string password
 // and if error return empty string with error else
@@ -24,6 +29,40 @@ func GenerateCryptPassword(password string) (string, error) {
 	}
 
 	return string(cryptPassword), nil
+}
+
+// GenerateTokenString function to create a string token with 15 minutes
+// expiration time and username of user.
+// Return the string token, expiration time and nil if no error, else
+// error not nil.
+func GenerateTokenString(username string) (string, time.Time, error) {
+	expirationTime := time.Now().Add(time.Minute * 15)
+
+	claim := &models.Claim{
+		Username: username,
+		RegisteredClaims: jwt.RegisteredClaims{
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+
+	tokenString, err := token.SignedString(JwtSecretKey)
+
+	return tokenString, expirationTime, err
+}
+
+// GetJWTCookie function to create a http cookie for the given token string
+// and expiration time. Return a reference to the cookie object.
+func GetJWTCookie(tokenString string, expirationTime time.Time) *http.Cookie {
+	return &http.Cookie{
+		Name:     "token",
+		Path:     "/",
+		Value:    tokenString,
+		Expires:  expirationTime,
+		HttpOnly: true,
+	}
 }
 
 // CheckHashWithPassword function to check if a given password match
