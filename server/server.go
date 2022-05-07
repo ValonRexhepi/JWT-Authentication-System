@@ -22,6 +22,7 @@ func LaunchServer() {
 
 	router.POST("/users/register", routes.AddUser)
 	router.POST("/users/login", routes.LoginUser)
+	router.GET("/users/login", routes.AuthenticateUser)
 
 	err := router.Run("localhost:8080")
 

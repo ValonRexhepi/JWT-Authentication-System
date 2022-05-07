@@ -1,17 +1,21 @@
 # JWT Authentication System
 ## Goal
-The goal of this project is to create a Go application that implements JWT 
-Authentication. This API will serve as a demonstration and training for the use 
-of various technologies with Go.
+The goal of this project is to create a Go application that implements a JWT 
+token Authentication. This API will serve as a demonstration and training for 
+the use of various technologies with Go. The token is valid 15 minutes but 
+can be refresh if 1 minute remains from is expiration.
 
 ## Methods Available
 - Register an User
 - Login an User
+- Authenticate User with token
 
 ## Routes Requests
 - [POST]
   - localhost:8080/users/register &rarr; Register an User
   - localhost:8080/users/login &rarr; Login an User and Create JWT Token
+- [GET]
+  - localhost:8080/users/login &rarr; Authenticate an User with JWT Token
 
 ## Libraries Used
 - [Gorm, ORM Management Library](https://gorm.io/index.html)

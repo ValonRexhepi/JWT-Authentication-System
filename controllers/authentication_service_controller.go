@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -51,6 +52,17 @@ func GenerateTokenString(username string) (string, time.Time, error) {
 	tokenString, err := token.SignedString(JwtSecretKey)
 
 	return tokenString, expirationTime, err
+}
+
+func GetToken(tokenString string, claim *models.Claim) (*jwt.Token, error) {
+	tkn, err := jwt.ParseWithClaims(tokenString, claim,
+		func(token *jwt.Token) (interface{}, error) {
+			if token.Method.Alg() != "HS256" {
+				return nil, fmt.Errorf("cannot sign in with this token")
+			}
+			return JwtSecretKey, nil
+		})
+	return tkn, err
 }
 
 // GetJWTCookie function to create a http cookie for the given token string

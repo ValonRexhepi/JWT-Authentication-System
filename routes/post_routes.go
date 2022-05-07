@@ -17,16 +17,15 @@ func AddUser(c *gin.Context) {
 
 	if err := c.Bind(&newUser); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": fmt.Sprintf("Error of type : %v", err),
+			"error": "cannot add user",
 		})
 		return
 	}
 
 	id, err := controllers.AddUser(&newUser)
-
 	if id == -1 || err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": fmt.Sprintf("Error of type : %v", err),
+			"error": fmt.Sprint(err),
 		})
 		return
 	}
@@ -41,14 +40,14 @@ func AddUser(c *gin.Context) {
 }
 
 // LoginUser function to respond to a login of a user.
-// Respond by JSON object with error if error,
-// else respond with success message and JWT cookie.
+// Respond by JSON object with error if error, else respond with success
+// message and JWT cookie.
 func LoginUser(c *gin.Context) {
 	var loginUser models.User
 
 	if err := c.Bind(&loginUser); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": fmt.Sprintf("Error of type : %v", err),
+			"error": "cannot login user",
 		})
 		return
 	}
@@ -57,7 +56,7 @@ func LoginUser(c *gin.Context) {
 
 	if err != nil || len(username) == 0 {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": fmt.Sprintf("Error of type : %v", err),
+			"error": fmt.Sprint(err),
 		})
 		return
 	}
@@ -66,7 +65,7 @@ func LoginUser(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": fmt.Errorf("something went wrong with the connection"),
+			"error": "cannot login user",
 		})
 		return
 	}
