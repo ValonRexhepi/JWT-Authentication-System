@@ -22,12 +22,15 @@ func LaunchServer() {
 
 	router.POST("/users/register", routes.AddUser)
 	router.POST("/users/login", routes.LoginUser)
+
 	router.GET("/users/login", routes.AuthenticateUser)
+	router.GET("/users/refresh", routes.RefreshUser)
+	router.GET("/users/logout", routes.Logout)
 
 	err := router.Run("localhost:8080")
 
 	if err != nil {
-		fmt.Println("Can't launch the server: ", err)
+		fmt.Println("can't launch the server: ", err)
 		os.Exit(-1)
 	}
 }

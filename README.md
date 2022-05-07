@@ -8,7 +8,9 @@ can be refresh if 1 minute remains from is expiration.
 ## Methods Available
 - Register an User
 - Login an User
-- Authenticate User with token
+- Refresh a Token
+- Authenticate User with Token
+- Logout User and Destroy Token
 
 ## Routes Requests
 - [POST]
@@ -16,6 +18,8 @@ can be refresh if 1 minute remains from is expiration.
   - localhost:8080/users/login &rarr; Login an User and Create JWT Token
 - [GET]
   - localhost:8080/users/login &rarr; Authenticate an User with JWT Token
+  - localhost:8080/users/refresh &rarr; Refresh the Token on an User
+  - localhost:8080/users/logout &rarr; Logout the User and Destroy Token
 
 ## Libraries Used
 - [Gorm, ORM Management Library](https://gorm.io/index.html)
@@ -23,6 +27,12 @@ can be refresh if 1 minute remains from is expiration.
 - [bcrypt, Password Encoder Decoder](https://pkg.go.dev/golang.org/x/crypto/bcrypt)
 - [go password validator, Password Entropy Validator](https://github.com/wagslane/go-password-validator)
 - [golang-jwt v4](https://pkg.go.dev/github.com/golang-jwt/jwt/v4)
+
+## Helpful Related Resources
+- [JWT Authentication](https://www.sohamkamani.com/golang/jwt-authentication/)
+- [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519)
+- [JWT Security Best Practices](https://curity.io/resources/learn/jwt-best-practices/)
+- [Video - React and JWT Authentication](https://www.youtube.com/watch?v=d4Y2DkKbxM0)
 
 ## Docker Image
 - [MySql Docker Image :latest](https://hub.docker.com/_/mysql)

@@ -17,7 +17,9 @@ func AddUser(userToAdd *models.User) (int, error) {
 		return -1, fmt.Errorf("you cannot have empty fields")
 	}
 
-	if err := ValidatePasswordEntropy(userToAdd.Password); err != nil {
+	// We choose a entropy of 100, see password validator for information
+	// on password entropy
+	if err := ValidatePasswordEntropy(userToAdd.Password, 100); err != nil {
 		return -1, err
 	}
 

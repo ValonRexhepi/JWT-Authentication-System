@@ -32,6 +32,20 @@ func GenerateCryptPassword(password string) (string, error) {
 	return string(cryptPassword), nil
 }
 
+// CheckHashWithPassword function to check if a given password match
+// the hash in the database. Return nil if match else return the err.
+func CheckHashWithPassword(passwordHashed, password string) error {
+	return bcrypt.CompareHashAndPassword([]byte(passwordHashed),
+		[]byte(password))
+}
+
+// ValidatePasswordEntropy checks the password given entropy return
+// error with nil if has enough entropy else return a description
+// message on how to improve password entropy.
+func ValidatePasswordEntropy(password string, entropy float64) error {
+	return passwordvalidator.Validate(password, entropy)
+}
+
 // GenerateTokenString function to create a string token with 15 minutes
 // expiration time and username of user.
 // Return the string token, expiration time and nil if no error, else
@@ -48,12 +62,13 @@ func GenerateTokenString(username string) (string, time.Time, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-
 	tokenString, err := token.SignedString(JwtSecretKey)
 
 	return tokenString, expirationTime, err
 }
 
+// GetToken function to get a token from a tokenString and a claim.
+// Return token with nil as error if success else error contains the error.
 func GetToken(tokenString string, claim *models.Claim) (*jwt.Token, error) {
 	tkn, err := jwt.ParseWithClaims(tokenString, claim,
 		func(token *jwt.Token) (interface{}, error) {
@@ -77,16 +92,15 @@ func GetJWTCookie(tokenString string, expirationTime time.Time) *http.Cookie {
 	}
 }
 
-// CheckHashWithPassword function to check if a given password match
-// the hash in the database. Return nil if match else return the err.
-func CheckHashWithPassword(passwordHashed, password string) error {
-	return bcrypt.CompareHashAndPassword([]byte(passwordHashed),
-		[]byte(password))
-}
+// RefreshTokenWithTim function to refresh a token with a given
+// expiration time.
+// Return the string token, expiration time and nil if no error, else
+// error not nil.
+func RefreshTokenWithTime(claim *models.Claim, expirationTime time.Time) (string, time.Time, error) {
+	claim.ExpiresAt = jwt.NewNumericDate(expirationTime)
 
-// ValidatePasswordEntropy checks the password entropy return
-// error with nil if has enough entropy else return a description
-// message on how to improve password entropy.
-func ValidatePasswordEntropy(password string) error {
-	return passwordvalidator.Validate(password, 100)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+	tokenString, err := token.SignedString(JwtSecretKey)
+
+	return tokenString, expirationTime, err
 }

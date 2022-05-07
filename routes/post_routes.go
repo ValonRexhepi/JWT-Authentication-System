@@ -31,7 +31,7 @@ func AddUser(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"success": "Successfully created user",
+		"success": "successfully created user",
 		"usercreated": map[string]string{
 			"username": newUser.Username,
 			"email":    newUser.Email,
@@ -74,6 +74,6 @@ func LoginUser(c *gin.Context) {
 		controllers.GetJWTCookie(tokenString, expirationTime))
 
 	c.JSON(http.StatusOK, gin.H{
-		"success": "Successfully connected",
+		"success": "successfully connected",
 	})
 }

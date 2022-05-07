@@ -17,7 +17,7 @@ func Connect() {
 	cst := "root:secret@tcp(127.0.0.1:3306)/UserDB?charset=utf8mb4&parseTime=True&loc=Local"
 	connection, err := gorm.Open(mysql.Open(cst), &gorm.Config{})
 	if err != nil {
-		log.Fatalln("Connection to database failed: ", err)
+		log.Fatalln("connection to database failed: ", err)
 	}
 	DB = connection
 }
@@ -26,6 +26,6 @@ func Connect() {
 // to the database.
 func Migrate() {
 	if err := DB.AutoMigrate(&models.User{}); err != nil {
-		log.Fatalln("Schema migration failed: ", err)
+		log.Fatalln("schema migration failed: ", err)
 	}
 }
